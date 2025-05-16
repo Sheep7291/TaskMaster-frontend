@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import {Task} from './task.model';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+
+const BASE_URL = 'http://localhost:8081/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
   tasks: Task[] = [{
     id: 1,
     name: 'Desigg wireframe',
@@ -32,24 +36,23 @@ export class TaskService {
       project: 1
     },];
 
-  getTasks(){
-    return this.tasks
+  getTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(`${BASE_URL}/tasks`);
   }
 
-  addTask(task: Task){
-    this.tasks.push(task);
-    return this.tasks;
+  addTask(task: Task) {
+    return this.http.post(`${BASE_URL}/tasks`, { ...task, project: null, id: null });
   }
 
-  updateTask(newTask: Task){
-    const taskIndex = this.tasks.findIndex(task => task.id === newTask.id);
-    this.tasks[taskIndex] = newTask
-    return this.tasks;
+  // updateTask
+  updateTask(newTask: Task) {
+    return this.http.put(`${BASE_URL}/tasks/${newTask.id}`, {
+      ...newTask,
+      project: null,
+    });
   }
 
   deleteTask(id: number){
-    const taskIndex = this.tasks.findIndex(task => task.id === id);
-    this.tasks.splice(taskIndex, 1);
-    return this.tasks;
+    return this.http.delete(`${BASE_URL}/tasks/${id}`);
 }
 }

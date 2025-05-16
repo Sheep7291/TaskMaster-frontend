@@ -55,14 +55,16 @@ export class TaskFormComponent implements OnChanges{
       };
 
       if (this.formType === 'CREATE') {
-        this.taskService.addTask(newTask)
-        }
-      else {
-        this.taskService.updateTask(newTask)
-        }
-      this.closePanel.emit('SUBMIT');
+        this.taskService.addTask(newTask).subscribe(() => {
+          this.closePanel.emit('SUBMIT');
+        });
+      } else {
+        this.taskService.updateTask(newTask).subscribe(() => {
+          this.closePanel.emit('SUBMIT');
+        });
       }
     }
+  }
 
   handleCancel() {
     this.closePanel.emit('CANCEL');

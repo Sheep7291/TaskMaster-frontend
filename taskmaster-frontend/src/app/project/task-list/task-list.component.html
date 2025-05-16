@@ -15,7 +15,7 @@
     </tr>
     </thead>
     <tbody>
-      @for (task of tasks; track task.id){
+      @for (task of tasks$ | async; track task.id){
     <tr>
     <td>
       <label class="{{task.completed ? 'completed-task' : ''}}">
@@ -40,9 +40,9 @@
     </tbody>
   </table>
   <div class ="button-container">
-    <button (click)="showModal = true">Add New Task</button>
+    <button (click)="addNewTask()">Add New Task</button>
     @if(showModal){
-      <app-task-form (closePanel)="showModal = false"
+      <app-task-form (closePanel)="handleModalClose($event)"
       [currentTask] = "selectedTask" [formType]="formType"></app-task-form>
     }
   </div>
